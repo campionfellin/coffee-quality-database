@@ -1,8 +1,10 @@
+install.packages(c('dplyr', 'stringr', 'digest'), repos = "http://cran.us.r-project.org")
+
 library(dplyr)
 library(stringr)
 library(digest)
 
-df = read.csv('/Users/jledoux/Documents/projects/coffee-quality-database/data/arabica_ratings_raw.csv')
+df = read.csv('/Users/campionfellin/Desktop/coffeequalitydatabase/coffee-quality-database/df_1_600.csv')
 
 df$X = NULL
 df$X.1 = NULL
@@ -930,12 +932,12 @@ df$alt_high = NULL
 df$alt_mean = NULL
 df$Notes = NULL
 
-write.csv(df,file='/Users/jledoux/Documents/projects/coffee-quality-database/data/arabica_data_cleaned.csv')
+write.csv(df,file='/Users/campionfellin/Desktop/coffeequalitydatabase/coffee-quality-database/data/arabica_data_cleaned.csv')
 
 ########################################
 # repeat for robustas
 ########################################
-df = read.csv('/Users/jledoux/Documents/projects/coffee-quality-database/data/robusta_ratings_raw.csv')
+df = read.csv('/Users/campionfellin/Desktop/coffeequalitydatabase/coffee-quality-database/data/robusta_ratings_raw.csv')
 
 
 df$X = NULL
@@ -1858,5 +1860,5 @@ df$alt_high = NULL
 df$alt_mean = NULL
 df$Notes = NULL
 
-write.csv(df,file='/Users/jledoux/Documents/projects/coffee-quality-database/data/robusta_data_cleaned.csv')
+write.csv(df,file='/Users/campionfellin/Desktop/coffeequalitydatabase/coffee-quality-database/data/robusta_data_cleaned.csv')
 
