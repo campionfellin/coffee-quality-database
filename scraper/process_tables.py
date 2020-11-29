@@ -1,21 +1,30 @@
 import pandas as pd
 import numpy as np
 
-# TODO: fix 'skips', add remaining rows once scrape completes 
 
 df_list = []
-# 87 turned out weird, figure out what happened here
-skips = [87, 101, 144, 215, 347, 350, 360,374]
-for i in range(600):
+skips = []
+
+# Default coffee numbers (already known, but can be updated)
+coffee_numbers = ['797340', '630917', '961547', '976095', '640499', '507718', '758571', '619167', '529406', '811504', '135582', '939387', '835570', '123896', '471216', '427875', '713155', '501173', '408751', '694807', '275081', '226926', '925989', '353708', '881745', '551955', '502806', '374364', '900224', '366737', '599249', '848100', '747694', '919897', '188057', '562525', '468749', '652231', '418612', '531749', '826052', '363072', '481969', '565015', '826681', '524961', '360769', '277424', '745862', '528189', '696793', '822911', '656051', '437143', '498918', '612046', '870843', '739227', '270107', '530305', '971417', '777532', '945126', '505661', '889380', '913558', '887829', '708727', '325206', '626072', '402577', '955100', '819209', '910258', '510686', '471378', '213200', '981880', '350487', '386512', '778342', '965326', '551160', '740624', '357799', '202360', '385795', '503643', '734614', '485415', '435010', '154271', '244253', '947026', '609705', '286122', '606938', '560979', '770298', '416481', '131629', '436849', '139380', '351180', '576176', '898272', '285178', '652875', '545835', '175658', '358005', '904659', '126880', '184562', '458487', '813284', '564165', '799551']
+
+coffee_numbers = [int(coffee_number) for coffee_number in coffee_numbers]
+
+for idx, i in enumerate(coffee_numbers): # 600
+	print(i)
 	if i in skips:
 		print('skipping {}'.format(i))
 		pass
 	else:
-		df1 = pd.read_csv('coffee_{}_table_0.csv'.format(i))
-		df2 = pd.read_csv('coffee_{}_table_1.csv'.format(i))
-		df3 = pd.read_csv('coffee_{}_table_2.csv'.format(i))
-		df4 = pd.read_csv('coffee_{}_table_3.csv'.format(i))
-		df5 = pd.read_csv('coffee_{}_table_4.csv'.format(i))
+		try:
+			df1 = pd.read_csv('coffee_{}_table_0.csv'.format(i))
+			df2 = pd.read_csv('coffee_{}_table_1.csv'.format(i))
+			df3 = pd.read_csv('coffee_{}_table_2.csv'.format(i))
+			df4 = pd.read_csv('coffee_{}_table_3.csv'.format(i))
+			df5 = pd.read_csv('coffee_{}_table_4.csv'.format(i))
+		except FileNotFoundError:
+			print('skipping {}'.format(i))
+			pass
 
 
 		# df1
@@ -30,12 +39,12 @@ for i in range(600):
 		6           6                           Species    Arabica
 		7           7                             Owner  metad plc
 		"""
-		df1.columns = ['one','two','three']
-		colnames1 = df1['two'].tolist()
+		df1.columns = ['one','two']
+		colnames1 = df1['one'].tolist()
 		# these names are inconistent, but the data doesn't look important 
 		colnames1[1] = 'view_certificate_1'
 		colnames1[2] = 'view_certificate_2'
-		data1 = df1['three'].tolist()
+		data1 = df1['two'].tolist()
 		data1[0] = colnames1[0]
 		colnames1[0] = 'quality_score'
 
@@ -106,7 +115,7 @@ for i in range(600):
 		2             NaN  
 		"""
 
-		df4.columns = ['one','two','three','four','five']
+		df4.columns = ['one','two','three','four','five', 'six', 'seven']
 		colnames1 = df4['two'].tolist()
 		colnames2 = df4['four'].tolist()
 		data1 = df4['three'].tolist()
@@ -134,19 +143,18 @@ for i in range(600):
 		colnames1 = df5['two'].tolist()
 		data1 = df5['three'].tolist()
 
-		if i > 1:
+		if idx > 1:
 			prev_cols = df.columns # cols before repalcing df with next coffee 
 
 		df5_processed = pd.DataFrame([data1],columns=colnames1)
 		df = pd.concat([df1_processed,df2_processed,df3_processed,df4_processed,df5_processed],1)
 		df = df.rename(columns = {np.nan : "NA"})
 		df_list.append(df)
-		print(i)
 
 		these_cols = df.columns
 
 		# are the columns matching across coffees? 
-		if i>1:
+		if idx>1:
 			# figuring out where the column mismatches are 
 			#print(these_cols==prev_cols)
 			#print(these_cols)
